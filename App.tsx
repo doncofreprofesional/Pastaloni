@@ -1,60 +1,3 @@
-// import React from 'react';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { Ionicons } from '@expo/vector-icons';
-// import HomeScreen from './src/Views/Home';
-// import Screen1 from './src/Views/MenuItems/Screen1';
-// import Screen2 from './src/Views/MenuItems/Screen2';
-// import Screen3 from './src/Views/MenuItems/Screen3';
-
-// type RootTabParamList = {
-//   Screen1: undefined;
-//   Screen2: undefined;
-//   Home: undefined;
-//   Screen3: undefined;
-// };
-
-// const Tab = createBottomTabNavigator<RootTabParamList>();
-
-// const App: React.FC = () => {
-//   return (
-//     <NavigationContainer>
-//       <Tab.Navigator
-//         screenOptions={({ route }) => ({
-//           tabBarIcon: ({ focused, color, size }) => {
-//             let iconName: keyof typeof Ionicons.glyphMap;
-
-//             if (route.name === 'Screen1') {
-//               iconName = focused ? 'settings' : 'settings-outline';
-//             } else if (route.name === 'Home') {
-//               iconName = focused ? 'home' : 'home-outline';
-//             } else if (route.name === 'Screen2') {
-//               iconName = focused ? 'list' : 'list-outline';
-//             } else if (route.name === 'Screen3') {
-//               iconName = focused
-//                 ? 'information-circle'
-//                 : 'information-circle-outline';
-//             } else {
-//               iconName = 'ellipse';
-//             }
-
-//             return <Ionicons name={iconName} size={size} color={color} />;
-//           },
-//           tabBarActiveTintColor: 'tomato',
-//           tabBarInactiveTintColor: 'gray',
-//           tabBarStyle: { height: 60 },
-//         })}
-//       >
-//         <Tab.Screen name="Screen1" component={Screen1} />
-//         <Tab.Screen name="Screen2" component={Screen2} />
-//         <Tab.Screen name="Home" component={HomeScreen} />
-//         <Tab.Screen name="Screen3" component={Screen3} />
-//       </Tab.Navigator>
-//     </NavigationContainer>
-//   );
-// };
-
-// export default App;
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -63,45 +6,137 @@ import LoginScreen from '../Pastaloni/src/Views/Login';
 import RegisterScreen from '../Pastaloni/src/Views/Register';
 import ForgottenPasswordScreen from '../Pastaloni/src/Views/ForgottenPassword';
 import CreateCompanyScreen from '../Pastaloni/src/Views/CreateCompany';
+import AdministrationScreen from './src/Views/MenuItems/Administration/AdministrationPrincipal';
+import DeliveryScreen from './src/Views/MenuItems/Delivery/DeliveryPrincipal';
+import SellScreen from './src/Views/MenuItems/Sell/SellPrincipal';
+import WareHouseScreen from './src/Views/MenuItems/WareHouse/WareHousePrincipal';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
+// type RootStackParamList = {
+//   Home: undefined;
+//   Login: undefined;
+//   Register: undefined;
+//   ForgottenPassword: undefined;
+//   CreateCompany: undefined;
+//   AdministrationPrincipal: undefined;
+//   DeliveryPrincipal: undefined;
+//   SellPrincipal: undefined;
+//   WareHousePrincipal: undefined;
+
+  
+// };
 type RootStackParamList = {
-  Home: undefined;
   Login: undefined;
   Register: undefined;
   ForgottenPassword: undefined;
   CreateCompany: undefined;
+  Home: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+type TabParamList = {
+  Home: undefined;
+  AdministrationPrincipal: undefined;
+  DeliveryPrincipal: undefined;
+  SellPrincipal: undefined;
+  WareHousePrincipal: undefined;
+};
 
+
+const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
+const BottomTabs: React.FC = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case 'Home':
+              iconName = 'home';
+              break;
+            case 'AdministrationPrincipal':
+              iconName = 'briefcase';
+              break;
+            case 'DeliveryPrincipal':
+              iconName = 'bicycle';
+              break;
+            case 'SellPrincipal':
+              iconName = 'cash';
+              break;
+            case 'WareHousePrincipal':
+              iconName = 'cube';
+              break;
+            default:
+              iconName = 'ellipse';
+              break;
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'blue',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          backgroundColor: '#ffffff',
+          height: 60,
+        },
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerTitle: 'Home' }} />
+      <Tab.Screen
+        name="AdministrationPrincipal"
+        component={AdministrationScreen}
+        options={{ headerTitle: 'Administration' }}
+      />
+      <Tab.Screen
+        name="DeliveryPrincipal"
+        component={DeliveryScreen}
+        options={{ headerTitle: 'Delivery' }}
+      />
+      <Tab.Screen
+        name="SellPrincipal"
+        component={SellScreen}
+        options={{ headerTitle: 'Sell' }}
+      />
+      <Tab.Screen
+        name="WareHousePrincipal"
+        component={WareHouseScreen}
+        options={{ headerTitle: 'WareHouse' }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+// Main App Navigator
 const App: React.FC = () => {
   return (
-    <NavigationContainer> 
-      <Stack.Navigator initialRouteName= 'Login' /*userlogged ?  "Home" : 'Login' */>
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerTitle: 'Login' }} // Título de la pantalla Login
-      />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ headerTitle: 'Home' }} // Título de la pantalla Home
+          name="Login"
+          component={LoginScreen}
+          options={{ headerTitle: 'Login' }}
         />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={{ headerTitle: 'Register' }} // Título de la pantalla Login
+          options={{ headerTitle: 'Register' }}
         />
         <Stack.Screen
           name="ForgottenPassword"
           component={ForgottenPasswordScreen}
-          options={{ headerTitle: 'I have forgotten my password' }} // Título de la pantalla Login
+          options={{ headerTitle: 'I have forgotten my password' }}
         />
         <Stack.Screen
           name="CreateCompany"
           component={CreateCompanyScreen}
-          options={{ headerTitle: 'Create Company' }} // Título de la pantalla Login
+          options={{ headerTitle: 'Create Company' }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={BottomTabs} // Incluye las pestañas como una pantalla
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -109,3 +144,58 @@ const App: React.FC = () => {
 };
 
 export default App;
+// const App: React.FC = () => {
+//   return (
+//     <NavigationContainer> 
+//       <Stack.Navigator initialRouteName= 'Login' /*userlogged ?  "Home" : 'Login' */>
+//       <Stack.Screen
+//         name="Login"
+//         component={LoginScreen}
+//         options={{ headerTitle: 'Login' }} 
+//       />
+//         <Stack.Screen
+//           name="Home"
+//           component={HomeScreen}
+//           options={{ headerTitle: 'Home' }} 
+//         />
+//         <Stack.Screen
+//           name="Register"
+//           component={RegisterScreen}
+//           options={{ headerTitle: 'Register' }} 
+//         />
+//         <Stack.Screen
+//           name="ForgottenPassword"
+//           component={ForgottenPasswordScreen}
+//           options={{ headerTitle: 'I have forgotten my password' }} 
+//         />
+//         <Stack.Screen
+//           name="CreateCompany"
+//           component={CreateCompanyScreen}
+//           options={{ headerTitle: 'Create Company' }} 
+//         />
+//         <Stack.Screen
+//           name="AdministrationPrincipal"
+//           component={AdministrationScreen}
+//           options={{ headerTitle: 'Administration' }} 
+//         />
+//         <Stack.Screen
+//           name="DeliveryPrincipal"
+//           component={DeliveryScreen}
+//           options={{ headerTitle: 'Delivery' }} 
+//         />
+//         <Stack.Screen
+//           name="SellPrincipal"
+//           component={SellScreen}
+//           options={{ headerTitle: 'Sell' }} 
+//         />
+//         <Stack.Screen
+//           name="WareHousePrincipal"
+//           component={WareHouseScreen}
+//           options={{ headerTitle: 'WareHouse' }} 
+//         />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// };
+
+// export default App;

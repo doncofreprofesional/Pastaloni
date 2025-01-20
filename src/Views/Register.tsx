@@ -13,12 +13,12 @@ type RootStackParamList = {
     CreateCompany: undefined;
   };
 
-type User ={
-
-}  
 type Props = StackScreenProps<RootStackParamList, 'Register'>;
 
 const RegisterScreen: React.FC<Props> = ({navigation}) => {
+    const [repeatEmail, setRepeatEmail] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    let errors = '';
     const [user, setUser] = useState<UserReg>({
       FullName: '',
       IdentificationNumber: '',
@@ -39,11 +39,54 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
         [field]: value,
       }));
     };
+    const validate = () => {
+      let valid = true;
+      if (user.FullName.length < 5 ) {
+        errors += "Full name is required.\n";
+        valid = false;
+      }
+      if (user.Email.length < 1) {
+        errors += "Email is required.\n";
+        valid = false;
+      } else if (!/\S+@\S+\.\S+/.test(user.Email)) {
+        errors = "Invalid email format.\n";
+        valid = false;
+      }
+      if (user.Email !== repeatEmail ) {
+        errors = "Emails doen't match\n";
+        valid = false;
+      }
+      if (user.Password.length < 1) {
+        errors = "Password is required.\n";
+        valid = false;
+      } else if (user.Password.length < 6) {
+        errors = "Password must be at least 6 characters.\n";
+        valid = false;
+      } else if (!/[A-Z]/.test(user.Password)) {
+        // Verifica si contiene al menos una letra mayúscula
+        errors = "Password must contain at least one uppercase letter.\n";
+        valid = false;
+      } else if (!/[0-9]/.test(user.Password)) {
+        // Verifica si contiene al menos un número
+        errors = "Password must contain at least one number.\n";
+        valid = false;
+      } 
+      if (user.Password !== repeatPassword) {
+        errors = "Passwords do not match.\n";
+        valid = false;
+      }
+      console.log(errors)
+      return valid;
+    };
 
     const handleSubmit = () => {
-      if(user.Email === 'cofre.le@gmail.com')
+      if(validate())
       {
-        navigation.navigate('Home')
+        navigation.navigate('Login');
+      }
+      else {
+        console.log('asd')
+        navigation.navigate('Login');
       }
     };
   return (
@@ -52,7 +95,7 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
       <TextInput style={styles.input} placeholder='FullName' value={user.FullName} onChangeText={(value) => handleChange('FullName', value)}/>
       <TextInput style={styles.input} placeholder='Identification Number' value={user.IdentificationNumber} onChangeText={(value) => handleChange('IdentificationNumber', value)}/>
       <TextInput style={styles.input} placeholder='Email' value={user.Email} onChangeText={(value) => handleChange('Email', value)}/>
-      {/* <TextInput style={styles.input} placeholder='Repeat Email' value={user} onChangeText={(value) => handleChange('FullName', value)}/> */}
+      <TextInput style={styles.input} placeholder='Repeat Email' value={repeatEmail} onChangeText={setRepeatEmail}/>
       <TextInput style={styles.input} placeholder='Phone' value={user.Phone} onChangeText={(value) => handleChange('Phone', value)}/>
       <TextInput style={styles.input} placeholder='Address' value={user.Address} onChangeText={(value) => handleChange('Address', value)}/>
       <TextInput style={styles.input} placeholder='Zip Code' value={user.ZipCode} onChangeText={(value) => handleChange('ZipCode', value)}/>
@@ -64,53 +107,8 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
+      {errors === '' && <Text>{errors}</Text>}
     </View>
   );
 };
-//() => navigation.navigate('Home')
-// const Styles = Stylesheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//       },
-//       title: {
-//         fontSize: 20,
-//         marginTop: -150,
-//         marginBottom: 20,
-//       },
-//       input: {
-//         width: '50%',
-//         height: 40,
-//         borderColor: 'gray',
-//         borderWidth: 1,
-//         padding: 10,
-//         borderRadius: 5,
-//         margin: 5,
-//         marginBottom:10,
-//       },
-//       button: {
-//         backgroundColor: '#3333',
-//         paddingVertical: 10,
-//         paddingHorizontal: 20,
-//         borderRadius: 10,
-//         marginTop: 20,
-//         // Sombra en Android
-//         elevation: -5, // Crea una sombra en Android
-//         // Sombra en iOS
-//         shadowColor: 'black', // Color de la sombra
-//         shadowOffset: {
-//           width: 3, // Desplazamiento horizontal
-//           height: 3, // Desplazamiento vertical
-//         },
-//         shadowOpacity: 0.25, // Opacidad de la sombra
-//         shadowRadius: 3.84, // Radio de difuminado
-//       },
-//       buttonText: {
-//         color: '606361',
-//         fontSize: 16,
-//         fontWeight: 'bold',
-//       },
-// });
-
 export default RegisterScreen;

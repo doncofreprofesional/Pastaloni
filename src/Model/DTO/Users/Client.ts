@@ -6,6 +6,7 @@ export interface Client extends UserLogged{
     Location: LocationT;
     Invoices: Invoice[]
     Sector: number;
+    //Company: Company;
   }
   //el cliente tendra razon social y facturas asociadas que vendran desde la solicitud de base de datos. 
   //La podra ver el cliente, al conjunto de facturas, mediante un endpoint se clasificara cuando las solicite el cliente o el vendedor (repartidor, administrador etc),
